@@ -36,6 +36,9 @@
             {% if perms.crud.change_user or perms.crud.delete_user or request.user.is_superuser %}
               <td>
                 {% if request.user == user.creator or request.user.is_superuser %}
+                  {% if perms.crud.change_user or request.user.is_superuser %}
+                    <a href="{% url 'edit_user' user.pk %}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">Edit</a>
+                  {% endif %}
                   {% if perms.crud.delete_user or request.user.is_superuser %}
                     <a href="{% url 'delete_user' user.pk%}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">Delete</a>
                   {% endif %}

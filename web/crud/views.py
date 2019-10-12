@@ -35,6 +35,23 @@ def add_user(request):
 
 
 @login_required(login_url='/admin')
+def edit_user(request, pk):
+    if request.user.has_perm('crud.change_user') is False and request.user.is_superuser is False:
+        return HttpResponse("You don't have access to this page.")
+    user = get_object_or_404(User, pk=pk)
+    form = UserForm(request.POST or None, instance=user)
+    if request.user != user.creator and request.user.is_superuser is False:
+        return HttpResponse("You don't have permission to do this.")
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('view_user_list')
+        else:
+            print(form.errors)
+    return render(request, 'edit_user.html', {'form': form})
+
+
+@login_required(login_url='/admin')
 def delete_user(request, pk):
     if request.user.has_perm('crud.delete_user') is False and request.user.is_superuser is False:
         return HttpResponse("You don't have access to this page.")
