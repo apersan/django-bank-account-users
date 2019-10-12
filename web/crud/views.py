@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import UserForm
@@ -32,3 +32,19 @@ def add_user(request):
     else:
         form = UserForm()
     return render(request, 'add_user.html', {'form': form})
+
+
+@login_required(login_url='/admin')
+def delete_user(request, pk):
+    if request.user.has_perm('crud.delete_user') is False and request.user.is_superuser is False:
+        return HttpResponse("You don't have access to this page.")
+    user = get_object_or_404(User, pk=pk)
+    if request.user != user.creator and request.user.is_superuser is False:
+        return HttpResponse("You don't have permission to do this.")
+    User.objects.filter(id=pk).delete()
+    users = User.objects.all()
+
+    context = {
+        'users': users,
+    }
+    return render(request, 'view_user_list.html', context)

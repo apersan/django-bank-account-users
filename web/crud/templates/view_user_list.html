@@ -35,7 +35,13 @@
             <td>{{ user.iban }}</td>
             {% if perms.crud.change_user or perms.crud.delete_user or request.user.is_superuser %}
               <td>
-
+                {% if request.user == user.creator or request.user.is_superuser %}
+                  {% if perms.crud.delete_user or request.user.is_superuser %}
+                    <a href="{% url 'delete_user' user.pk%}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">Delete</a>
+                  {% endif %}
+                {% else %}
+                  You are not the owner of this.
+                {% endif %}
               </td>
             {% endif %}
           </tr>
