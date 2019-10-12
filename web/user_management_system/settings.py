@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # apps
     'crud',
     'localflavor',
+    'import_export',
 ]
 
 MIDDLEWARE = [
