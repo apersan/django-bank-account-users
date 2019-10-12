@@ -26,6 +26,10 @@ SECRET_KEY = 'bz28yb5yaw37@=!@&3e@e)1a)p1!_zt)wxs5a8*s%qhv21&sjk'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+# Google OAuth credentials
+DJANGO_ADMIN_SSO_OAUTH_CLIENT_ID = 'YOUR_CLIENT_ID_HERE'
+DJANGO_ADMIN_SSO_OAUTH_CLIENT_SECRET = 'YOUR_CLIENT_SECRET_HERE'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'crud',
     'localflavor',
     'import_export',
+    'admin_sso',
 ]
 
 MIDDLEWARE = [
@@ -98,6 +103,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Google OAuth
+# https://pypi.org/project/django-admin-sso/
+AUTHENTICATION_BACKENDS = (
+    'admin_sso.auth.DjangoSSOAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
