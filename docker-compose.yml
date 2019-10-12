@@ -14,7 +14,16 @@ services:
       - .env
     depends_on:
       - db
-    command: /bin/bash -c 'sleep 7; python3 manage.py runserver 0.0.0.0:8000'
+    command: >
+      bash -c "cd /usr/src/app/ &&
+      chmod +x wait-for-postgres.sh &&
+      ./wait-for-postgres.sh db:5432 &&
+      python3 manage.py collectstatic --noinput &&
+      python3 manage.py makemigrations &&
+      python3 manage.py migrate &&
+      python3 manage.py ensure_adminuser --username=admin --email=admin@example.com --password=admin &&
+      python3 manage.py runserver 0.0.0.0:8000"
+    container_name: django_web
   db:
     restart: always
     image: postgres:11.5-alpine
@@ -24,6 +33,7 @@ services:
       - .env
     ports:
       - "5432:5432"
+    container_name: django_db
 
 volumes:
   postgres-data:
