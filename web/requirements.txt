@@ -1,0 +1,7 @@
+django==2.2.5
+python-dotenv==0.10.3
+psycopg2==2.8.3
+gunicorn==19.9.0
+django-localflavor==2.2
+django-admin-sso==2.4.0
+django-import-export==1.2.0
