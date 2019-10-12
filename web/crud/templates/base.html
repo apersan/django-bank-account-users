@@ -17,6 +17,11 @@
             <a class="nav-link" href="{% url 'view_user_list' %}">User List</a>
           </li>
         {% endif %}
+        {% if perms.crud.add_user or request.user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'add_user' %}">Add User</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
     <div class="mx-auto order-0">
