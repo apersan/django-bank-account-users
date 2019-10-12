@@ -26,6 +26,9 @@ SECRET_KEY = 'bz28yb5yaw37@=!@&3e@e)1a)p1!_zt)wxs5a8*s%qhv21&sjk'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+# This can be used to toggle between your local testing db (db.sqlite3) and the PostgreSQL backend:
+DOCKER = True if os.getenv('DOCKER') else False
+
 # Google OAuth credentials
 DJANGO_ADMIN_SSO_OAUTH_CLIENT_ID = 'YOUR_CLIENT_ID_HERE'
 DJANGO_ADMIN_SSO_OAUTH_CLIENT_SECRET = 'YOUR_CLIENT_SECRET_HERE'
@@ -79,12 +82,24 @@ WSGI_APPLICATION = 'user_management_system.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DOCKER:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': os.getenv('POSTGRES_HOST'),
+            'PORT': os.getenv('POSTGRES_PORT'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'NAME': os.getenv('POSTGRES_DB'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
